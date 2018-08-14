@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>MouseDirection</title>
+  <style>
+    body {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      background: url(./bg.png) no-repeat center center;
+      background-attachment: fixed;
+      background-size: 100%;
+      perspective: 1000px;
+    }
+
+    #wrap {
+      position: absolute;
+      height: 550px;
+      width: 350px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      transform-style: preserve-3d;
+      perspective-origin: 50% 50%;
+    }
+
+    .part {
+      height: 550px;
+      width: 350px;
+    }
+
+    .part::before{
+      content: '';
+      position: absolute;
+      display: block;
+      height: 100%;
+      width: 100%;
+      border-radius: 3px;
+      background: #ccf0ef;
+      box-shadow: 0px 0px 10px #222;
+      transition: transform 100ms 100ms;
+    }
+
+    #svg {
+      transition: transform 1s;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrap">
+    <div class="part">
+      <img src="./web-simple.svg" id="svg">
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcss.com/jquery/3.0.0-rc1/jquery.min.js"></script>
+  <script src="./MouseDirection.js"></script>
+  <script>
+    ; (function () {
+      //左上：10deg -10deg
+      //右上：10deg 10deg
+      //右下：-10deg 10deg
+      //左下：-10deg -10deg
+      $('.part').each(function () {
+        new MouseDirection(this, {
+          move: function ($this, direction) {
+            switch (direction) {
+              case 'top':
+                $this.css({ transform: "rotateX(1deg)" });
+                $this.find('#svg').css({ transform: "translateY(20px)" });
+                break;
+              case 'bottom':
+                $this.css({ transform: "rotateX(-1deg)" });
+                $this.find('#svg').css({ transform: "translateY(-20px)" });
+                break;
+              case 'left':
+                $this.css({ transform: "rotateY(-1deg)" });
+                $this.find('#svg').css({ transform: "translateX(20px)" });
+                break;
+              case 'right':
+                $this.css({ transform: "rotateY(1deg)" });
+                $this.find('#svg').css({ transform: "translateX(-20px)" });
+                break;
+            }
+          },
+          leave: function ($this, direction) {
+            $this.css({ transform: "rotateX(0deg) rotateY(0deg)" });
+            $this.find('#svg').css({ transform: "translateX(0px) translateY(0px)" });
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>

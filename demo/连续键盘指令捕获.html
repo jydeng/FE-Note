@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>keyCode</title>
+  <style>
+    .wrap {
+      width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h3>模拟魂斗罗30条命彩蛋</h3>
+    <p>使用键盘依次输入：<span style="color:red">上上下下左右左右BABA（383840403739373966656665）</span></p>
+    <p>输入情况可视化：</p>
+    <textarea id="keyCodeTxt" cols="30" rows="10" readonly></textarea>
+  </div>
+
+  <script>
+    ; (function () {
+      let key = '383840403739373966656665';
+      window.addEventListener('keydown', function (e) {
+        document.querySelector('#keyCodeTxt').value += e.keyCode;
+        if (window.timer) clearTimeout(window.timer);
+        window.timer = setTimeout(function () {
+          if (key === document.querySelector('#keyCodeTxt').value) {
+            alert('触发彩蛋,你有30条命');
+          }
+          document.querySelector('#keyCodeTxt').value = '';
+        }, 300);
+      });
+    })();
+  </script>
+</body>
+
+</html>

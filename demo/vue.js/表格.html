@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue-table</title>
+  <style>
+    body {
+      font-family: Helvetica Neue, Arial, sans-serif;
+      font-size: 14px;
+      color: #444;
+    }
+
+    table {
+      border: 2px solid #42b983;
+      border-radius: 3px;
+      background-color: #fff;
+    }
+
+    th {
+      background-color: #42b983;
+      color: rgba(255, 255, 255, 0.66);
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    td {
+      background-color: #f9f9f9;
+    }
+
+    th,
+    td {
+      min-width: 120px;
+      padding: 10px 20px;
+    }
+
+    th.active {
+      color: #fff;
+    }
+
+    th.active .arrow {
+      opacity: 1;
+    }
+
+    .arrow {
+      display: inline-block;
+      vertical-align: middle;
+      width: 0;
+      height: 0;
+      margin-left: 5px;
+      opacity: 0.66;
+    }
+
+    .arrow.asc {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 4px solid #fff;
+    }
+
+    .arrow.dsc {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <vue-table :data="data" :columns="columns"></vue-table>
+  </div>
+
+  <script type="text/x-template" id="table-template">
+    <div>
+      <table>
+          <thead>
+            <tr>
+              <th v-for="key in columns"
+                @click="sortBy(key)"
+                :class="{active:sort == key}">
+                {{key}}
+                <span class="arrow" :class="orders[key]"></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in filterData">
+              <td v-for="key in columns">
+                {{row[key]}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </script>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.bootcss.com/lodash.js/4.17.10/lodash.min.js"></script>
+  <script>
+    ; (function () {
+      Vue.component('vue-table', {
+        template: '#table-template',
+        props: {
+          data: Array,
+          columns: Array
+        },
+        data() {
+          let orders = {};
+          this.columns.forEach((key) => {
+            orders[key] = 'asc'
+          });
+
+          return {
+            sort: '',
+            orders: orders
+          }
+        },
+        computed: {
+          filterData() {
+            return this.sort ? (this.orders[this.sort]  === 'asc' ? _.sortBy(this.data, this.sort) : _.reverse(_.sortBy(this.data, this.sort))) : this.data;
+          }
+        },
+        methods: {
+          sortBy(key) {
+            this.sort = key;
+            this.orders[key] = (this.orders[key] == 'asc' ? 'dsc' : 'asc');
+          }
+        }
+      });
+
+      const app = new Vue({
+        el: '#app',
+        data: {
+          columns: ['name', 'age'],
+          data: [
+            { name: 'Roy', age: 18 },
+            { name: 'Wendy', age: 26 },
+            { name: 'Bob', age: 20 }
+          ]
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>

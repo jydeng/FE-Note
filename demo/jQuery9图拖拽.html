@@ -1,0 +1,192 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery9图拖拽</title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        .title {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        #box {
+            width: 580px;
+            height: 490px;
+            border: 1px solid #dedede;
+            position: relative;
+            transform: translateY(50%);
+            margin: 0 auto;
+        }
+
+        div.item {
+            width: 180px;
+            height: 150px;
+            border-radius: 5px;
+            margin: 5px;
+            float: left;
+            background: goldenrod;
+            border: 1px solid lightgray;
+            z-index: 1;
+            text-align: center;
+            font-size: 30px;
+            line-height: 100px;
+            cursor: move;
+        }
+
+        div.moving {
+            border: 1px dashed #dedede;
+            background: white;
+        }
+
+        div.draging {
+            width: 180px;
+            height: 150px;
+            position: absolute;
+            background: goldenrod;
+            box-shadow: 0 0 2px 2px #555;
+            border-radius: 5px;
+            z-index: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <div class="item">
+            <img src="https://wx4.sinaimg.cn/mw690/006JjCTYly1fqk4lge3ndj30yi0yi14i.jpg" width="180" height="150">
+        </div>
+        <div class="item">
+            <img src="https://wx2.sinaimg.cn/mw690/006JjCTYly1fqk4lgtzoyj30yi0yialg.jpg" width="180" height="150">
+        </div>
+        <div class="item">
+            <img src="https://wx2.sinaimg.cn/mw690/006JjCTYly1fqk4lhdxnzj30yi0yiwqi.jpg" width="180" height="150">
+        </div>
+        <div class="item">
+            <img src="https://wx3.sinaimg.cn/mw690/006JjCTYly1fqk4lhwwskj30yi0yidr1.jpg" width="180" height="150">
+        </div>
+        <div class="item">
+            <img src="https://wx2.sinaimg.cn/mw690/006JjCTYly1fqk4lih7glj30yi0yi7fp.jpg" width="180" height="150">
+        </div>
+        <div class="item">
+            <img src="https://wx4.sinaimg.cn/mw690/006JjCTYly1fqk4lit96rj30yi0yi14n.jpg" width="180" height="150">
+        </div>
+        <div class="item">
+            <img src="https://wx4.sinaimg.cn/mw690/006JjCTYly1fqk4lj6xjlj30yi0yidr8.jpg" width="180" height="150">
+        </div>
+        <div class="item">
+            <img src="https://wx3.sinaimg.cn/mw690/006JjCTYly1fqk4ljli8ej30yi0yi14x.jpg" width="180" height="150">
+        </div>
+        <div class="item">
+            <img src="https://wx2.sinaimg.cn/mw690/006JjCTYly1fqk4lkkz39j30yi0yiam1.jpg" width="180" height="150">
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcss.com/jquery/1.11.1-rc1/jquery.js"></script>
+    <script type="text/javascript">
+        // 思路
+        // 1、定义外层容器CSS、固定状态元素CSS、移动状态元素CSS、占位元素CSS
+        // 2、拖动准备，监听固定状态元素的mousedown事件
+        // 3、拖动开始，克隆被点击元素,追加到外层容器，清空被点击元素，增加Class，转化为占位元素
+        // 4、拖动中，监听外层容器mousemove事件，转为克隆元素的拖拽
+        // 5、拖动结束，监听克隆元素的mouseup事件，执行替换元素操作
+
+        var moving = true; //标记拖动状态
+
+        $('#box div').on('mousedown', function (e) {
+            if (moving) {
+
+                moving = false;
+
+                var that = this,
+                    disx = e.offsetX, //保存原始位置 X
+                    disy = e.offsetY, //保存原始位置 Y
+                    $clone = $(this).clone(); //克隆元素
+
+                //设置克隆元素的Class以及位置
+                $clone.addClass('draging').css({
+                    left: $(this).position().left,
+                    top: $(this).position().top
+                });
+
+                //追加到外层容器中
+                $('#box').append($clone);
+
+                //被克隆元素清空
+                $(this).addClass('moving').empty();
+
+                //监听外层容器mousemove事件，转为克隆元素的拖拽
+                $('#box').on('mousemove', function (e) {
+                    $clone.css({
+                        left: e.pageX - $(this).offset().left - disx,
+                        top: e.pageY - $(this).offset().top - disy
+                    })
+                });
+
+                //监听克隆元素mouseup事件
+                $clone.on('mouseup', function () {
+                    //外层容器解绑mousemove事件
+                    $('#box').off('mousemove');
+
+                    var minIndex = $(that).index(); //最小索引赋初始值
+                    var minValue = 1000; //初始化最小值，用来存储所有盒子的最小值
+
+                    //不包括克隆的元素
+                    $('#box div').not(':last').each(function () {
+                        //利用勾股定理获取每一个盒子离克隆出来的盒子的距离
+                        var smalldistance = Math.sqrt(Math.pow($clone.position().left - $(this)
+                            .position().left, 2) + Math.pow($clone.position().top - $(
+                            this).position().top, 2));
+                        if (smalldistance < minValue) {
+                            minValue = smalldistance; //获取最小值
+                            minIndex = $(this).index(); //获取最小值对应的索引
+                        }
+                    });
+
+                    //如果当前最小距离的那个盒子和拖拽的盒子索引相等的话，归位
+                    if (minIndex == $(that).index()) {
+                        $clone.animate($(that).position(), 400, function () {
+                            $(that).removeClass('moving').html($clone.html()); //恢复被克隆盒子的相关样式
+                            $(this).remove(); //移除被克隆的盒子
+                            moving = true;
+                        });
+                    } else {
+                        var $minbox = $('#box div').eq(minIndex); //最小索引的盒子
+                        var $clone2 = $minbox.clone(); //克隆一个最小盒子的副本，添加相关样式
+                        $clone2.addClass('draging').css({
+                            left: $minbox.position().left,
+                            top: $minbox.position().top
+                        })
+                        $('#box').append($clone2); //追加
+                        $minbox.addClass('moving').html('');
+                        $clone.animate($minbox.position(), 400, function () { //克隆的内容运动到最小索引的盒子的位置
+                            $minbox.removeClass('moving').html($clone.html()); //移除相关样式，添加内容
+                            $clone.remove(); //移除克隆的盒子
+                            moving = true;
+                        });
+                        $clone2.animate($(that).position(), 400, function () {
+                            $(that).removeClass('moving').html($clone2.html());
+                            $clone2.remove();
+                            moving = true;
+                        });
+                    }
+                });
+            }
+            return false;
+        });
+    </script>
+
+
+</body>
+
+</html>

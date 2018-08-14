@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>checkbox & radiobox</title>
+    <style>
+        /* 设置inline-block使label支持after且保持radio、checkbox布局方式 */
+        .R-label {
+            display: inline-block; 
+        }
+        
+        /* 强制box-sizing，避免被重置 */
+        .R-label * {
+            box-sizing: content-box !important; 
+        }
+        
+        /* 将radio、checkbox不显示，但还能交互 */
+        .R-radio {
+            visibility: hidden;
+            width: 0;
+        }
+        
+        /* 设置展示的样式 */
+        .R-radioInput {
+            background-color: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 100%;
+            display: inline-block;
+            height: 16px;
+            margin-right: 10px;
+            margin-top: -1px;
+            vertical-align: middle;
+            width: 16px;
+            line-height: 1
+        }
+        
+        .R-radio:checked+.R-radioInput:after {
+            background-color: #0099FF;
+            border-radius: 100%;
+            content: "";
+            display: inline-block;
+            height: 12px;
+            margin: 2px;
+            width: 12px
+        }
+        
+        /* checkbox与radio略有不同 */
+        .R-checkbox.R-radioInput,
+        .R-radio:checked+.R-checkbox.R-radioInput:after {
+            border-radius: 0
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <p>你是全栈工程师吗?</p>
+        <label class="R-label">
+            <input class="R-radio" type="radio" name="R-radio">
+            <span class="R-radioInput"></span> 是的，全栈最帅
+        </label>
+        <label class="R-label">
+            <input class="R-radio" type="radio" name="R-radio">
+            <span class="R-radioInput"></span> 不是，我还想下班
+        </label>
+    </div>
+    <div>
+        <p>你擅长的语言是？</p>
+        <label class="R-label">
+            <input class="R-radio" type="checkbox">
+            <span class="R-checkbox R-radioInput"></span>JavaScript
+        </label>
+        <label class="R-label">
+            <input class="R-radio" type="checkbox">
+            <span class="R-checkbox R-radioInput"></span>Java
+        </label>
+        <label class="R-label">
+            <input class="R-radio" type="checkbox">
+            <span class="R-checkbox R-radioInput"></span>C#
+        </label>
+</body>
+
+</html>

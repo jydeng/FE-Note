@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>省地市三级联动</title>
+</head>
+
+<body>
+  <div id="app">
+    <dropdown-list :citys="provinces" @vchange="handleP"></dropdown-list>
+    <dropdown-list :citys="citys" @vchange="handleC"></dropdown-list>
+    <dropdown-list :citys="areas" @vchange="handleA"></dropdown-list>
+    <p>{{result}}</p>
+  </div>
+
+  <!-- 源json数据 -->
+  <script src="pca.js"></script>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    Vue.component('dropdown-list', {
+      props: {
+        citys: Array
+      },
+      data() {
+        return {
+          current: ''
+        }
+      },
+      template: `<div>
+                <select @change="vChange()"  v-model="current">
+                  <option value="">请选择</option>
+                  <option v-for="city in citys" :key="city.code" :value="city">{{city.name}}</option>
+                </select>
+                </div>`,
+      methods: {
+        vChange() {
+          this.$emit('vchange', this.current);
+        }
+      }
+    });
+
+    const app = new Vue({
+      el: '#app',
+      data: {
+        province: '',
+        city: '',
+        area: '',
+        provinces: pca,
+        citys: [],
+        areas: []
+      },
+      computed: {
+        result() {
+          return [this.province,this.city,this.area].join('>>');
+        }
+      },
+      methods: {
+        handleP(province) {
+          this.province = province.name;
+          this.citys = province.children;
+          this.areas = [];
+          this.city = '';
+          this.area = '';
+        },
+        handleC(city) {
+          this.city = city.name;
+          this.areas = city.children;
+          this.area = '';
+        },
+        handleA(area) {
+          this.area = area.name;
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

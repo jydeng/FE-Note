@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>EasyAutoComplete</title>
+  <link rel="stylesheet" href="./EasyAutocomplete/easy-autocomplete.min.css">
+  <style>
+    .easy-autocomplete-container {
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .easy-autocomplete-container>ul {
+      margin-bottom: 0px;
+    }
+
+    .easy-autocomplete-container>ul>.all-item {
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0px -1px 5px #999;
+    }
+
+    .topicSelect {
+      width: 200px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: 15px 15px;
+      margin: 0 auto;
+    }
+
+    .topicSelect>.topiclist {
+      height: 200px;
+      width: 195px;
+      padding: 0;
+      overflow-y: auto;
+      border-radius: 3px;
+      list-style: none;
+      border: 1px solid #dfdfdf;
+      margin-bottom: 5px;
+    }
+
+    .topicSelect>.topiclist li {
+      position: relative;
+      display: block;
+      padding: 5px 5px 5px 10px;
+      box-sizing: border-box;
+      background: #f5f5f5;
+      margin: 2px;
+    }
+
+    .topicSelect p {
+      padding: 0;
+      margin: 0;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .topicSelect p:first-child {
+      margin: 5px 0;
+    }
+
+    .topicSelect p:first-child:before {
+      content: '#'
+    }
+
+    .topicSelect p:first-child:after {
+      content: '#'
+    }
+
+
+    .topicSelect>.topiclist li>.close {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      margin-top: -15px;
+      display: block;
+      width: 15px;
+      padding: 5px;
+      font-weight: 600;
+      font-size: 13px;
+      color: #999;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .topicSelect>.topiclist li>.close:hover {
+      color: #CC3333;
+    }
+
+    .topicSelect>.toolbar>label,
+    .topicSelect>.toolbar>p,
+    .topicSelect>.toolbar>.clearAll,
+    .topicSelect>.toolbar>.attendance,
+    .topicSelect>.toolbar>.coverage {
+      font-size: 13px;
+      color: #999;
+    }
+
+    .topicSelect>.toolbar .count {
+      color: #06f;
+    }
+
+    .topicSelect>.toolbar>.clearAll {
+      float: right;
+      cursor: pointer;
+    }
+
+    .topicSelect>.toolbar>.clearAll:hover {
+      color: #CC3333;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topicSelect" id="topicSelect">
+    <input type="text" id="search">
+    <ul class="topiclist">
+    </ul>
+    <div class="toolbar">
+      <label>已选择
+        <a class="count">0</a> 个</label>
+      <a class="clearAll">清除所有</a>
+      <p>实际参与人数：
+        <a class="attendance">0</a>
+      </p>
+      <p>预计覆盖人数：
+        <a class="coverage">0</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/mustache.js/2.3.0/mustache.js"></script>
+  <script src="./EasyAutocomplete/jquery.easy-autocomplete.js"></script>
+  <script>
+    var tpl = '<li data-md5="{{md5}}" data-attendance="{{attendance}}" data-coverage="{{coverage}}">' +
+      '<p title="{{description}}">{{title}}</p>' +
+      '<p>实际参与人数：{{attendance}}</p>' +
+      '<p>预计覆盖人数：{{coverage}}</p>' +
+      '<span class="close">X</span>' +
+      '</li>';
+
+    //获取所有数据
+    function statisticsData(selector, callback) {
+      var result = {
+        md5: [],
+        count: 0,
+        attendance: 0,
+        coverage: 0
+      };
+
+      $(selector).find('li').each(function (index, item) {
+        var $item = $(item);
+        result.md5.push($item.data('md5'));
+        result.count++;
+        result.attendance += $item.data('attendance');
+        result.coverage += $item.data('coverage');
+      });
+
+      callback ? callback(result) : false;
+      return result;
+    }
+
+    //判断是否存在
+    function isExit(selector, md5) {
+      return $(selector).find('[data-md5="' + md5 + '"]').length > 0;
+    }
+
+    var options = {
+      url: function (phrase) {
+        if (phrase) {
+          return 'http://www.weidong.mobi/dsp/adorder/topickey?keyword=' + phrase;
+        } else {
+          return 'http://www.weidong.mobi/dsp/adorder/queryhot';
+        }
+      },
+
+      listLocation: function (json) {
+        if (typeof json.topic_all === 'object') {
+          return json.topic_all.count > 0 ? json.topic_all.topic : [];
+        } else {
+          return json.topic_all;
+        }
+      },
+      getValue: function (result) {
+        return result.topic || result.title;
+      },
+
+      ajaxSettings: {
+        dataType: 'jsonp',
+      },
+
+      checkAll: true,
+
+      checkAllTxt: '全选 (自动选择前100个)',
+
+      requestDelay: 300,
+
+      list: {
+        maxNumberOfElements: 100,
+        match: { enabled: false },
+        onClickAllEvent: function () {
+          var allItemData = $("#search").getAllItemData();
+          for (var index = 0; index < allItemData.length; index++) {
+            var item = allItemData[index];
+            if (!isExit('#topicSelect .topiclist', item.md5)) {
+              $('#topicSelect .topiclist').append(Mustache.render(tpl, item));
+            }
+          }
+
+          statisticsData('#topicSelect .topiclist', function (result) {
+            $('#topicSelect .count').html(result.count);
+            $('#topicSelect .attendance').html(result.attendance);
+            $('#topicSelect .coverage').html(result.coverage);
+          });
+        },
+        onClickEvent: function () {
+          var item = $("#search").getSelectedItemData();
+          if (!isExit('#topicSelect .topiclist', item.md5)) {
+            $('#topicSelect .topiclist').append(Mustache.render(tpl, item));
+            statisticsData('#topicSelect .topiclist', function (result) {
+              $('#topicSelect .count').html(result.count);
+              $('#topicSelect .attendance').html(result.attendance);
+              $('#topicSelect .coverage').html(result.coverage);
+            });
+          }
+        }
+      }
+    };
+
+    $('#search').easyAutocomplete(options);
+
+    //单个删除
+    $('#topicSelect').on('click', '.close', function () {
+      $(this).parent().remove();
+      statisticsData('#topicSelect .topiclist', function (result) {
+        $('#topicSelect .count').html(result.count);
+        $('#topicSelect .attendance').html(result.attendance);
+        $('#topicSelect .coverage').html(result.coverage);
+      });
+    });
+
+    //全部删除
+    $('#topicSelect .clearAll').on('click', function () {
+      $('#topicSelect .topiclist').empty();
+      statisticsData('#topicSelect .topiclist', function (result) {
+        $('#topicSelect .count').html(result.count);
+        $('#topicSelect .attendance').html(result.attendance);
+        $('#topicSelect .coverage').html(result.coverage);
+      });
+    });
+  </script>
+</body>
+
+</html>

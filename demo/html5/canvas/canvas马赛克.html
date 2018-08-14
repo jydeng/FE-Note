@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>马赛克</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .wrapper {
+      margin: 0 auto;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .wrapper .top {
+      background: #f5f5f5;
+      text-align: center;
+      box-sizing: border-box;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .wrapper .left,
+    .wrapper .right {
+      text-align: center;
+      padding: 10px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="top">
+      <div style="text-align:left;width:330px;margin: 0 auto;">
+        <h4>canvas图片马赛克</h4>
+        <ol>
+          <li>选择图片
+            <input type="file" id="fileSelect" accept=".jpg,.png,.gif" />
+          </li>
+          <li>输入模糊像素数
+            <input type="number" id="pxNumber" value="5">
+          </li>
+          <li>右键保存马赛克图</li>
+        </ol>
+      </div>
+    </div>
+    <div class="left">
+      <canvas id="source"></canvas>
+    </div>
+    <div class="right">
+      <canvas id="mask"></canvas>
+    </div>
+  </div>
+  <script>
+    ; (function () {
+      let source = document.querySelector('#source');
+      let mask = document.querySelector('#mask');
+
+      if (source.getContext && mask.getContext) {
+        let sourceCtx = source.getContext('2d');
+        let maskCtx = mask.getContext('2d');
+
+        document.querySelector('#fileSelect').addEventListener('change', function () {
+          let file = this.files[0];
+          let img = new Image();
+          let reader = new FileReader();
+          img.onload = function () {
+            source.width = img.width;
+            source.height = img.height;
+            mask.width = img.width;
+            mask.height = img.height;
+            draw(img);
+          }
+          reader.onload = function () {
+            img.src = this.result;
+          }
+          reader.readAsDataURL(file);
+        }, false);
+
+        function draw(img) {
+          sourceCtx.drawImage(img, 0, 0);
+          let oldImgdata = sourceCtx.getImageData(0, 0, img.width, img.height);
+          let newImgdata = sourceCtx.createImageData(img.width, img.height);
+
+          let size = document.querySelector('#pxNumber').value;
+          for (let i = 0; i < oldImgdata.width / size; i++) {
+            for (let j = 0; j < oldImgdata.height / size; j++) {
+              let color = getPxInfo(oldImgdata, i * size + Math.floor(Math.random() * size), j * size + Math.floor(Math.random() * size));
+              for (let a = 0; a < size; a++) {
+                for (let b = 0; b < size; b++) {
+                  setPxInfo(newImgdata, i * size + a, j * size + b, color)
+                }
+              }
+            }
+          }
+
+          maskCtx.clearRect(0, 0, mask.width, mask.height);
+          maskCtx.putImageData(newImgdata, 0, 0, 0, 0, mask.width, mask.height);
+        }
+      }
+
+      function getPxInfo(imgdata, x, y) {
+        var color = [];
+        var data = imgdata.data;
+        var w = imgdata.width;
+        var h = imgdata.height;
+
+        color[0] = data[(y * w + x) * 4];
+        color[1] = data[(y * w + x) * 4 + 1];
+        color[2] = data[(y * w + x) * 4 + 2];
+        color[3] = data[(y * w + x) * 4 + 3];
+        return color;
+      }
+
+      function setPxInfo(imgdata, x, y, color) {
+        var data = imgdata.data;
+        var w = imgdata.width;
+        var h = imgdata.height;
+        data[(y * w + x) * 4] = color[0];
+        data[(y * w + x) * 4 + 1] = color[1];
+        data[(y * w + x) * 4 + 2] = color[2];
+        data[(y * w + x) * 4 + 3] = color[3];
+      }
+
+    })();
+  </script>
+</body>
+
+</html>

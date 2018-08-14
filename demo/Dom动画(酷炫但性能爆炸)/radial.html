@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>数字演义</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #999;
+    }
+
+    #radial {
+      position: relative;
+      width: 1100px;
+      height: 600px;
+      background: #fff;
+      box-sizing: border-box;
+      overflow: hidden;
+      margin: 0 auto;
+      margin-top: 150px;
+      padding: 0;
+      border-radius: 5px;
+      box-shadow: 0 0 10px 3px #666;
+    }
+
+    #radial .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: block;
+      z-index: 2;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: 0 0 3px 5px #fff; 
+    }
+
+    #radial .item {
+      position: absolute;
+      top: 50%;
+      left: calc(50%);
+      width: 40px;
+      transform-origin: top left;
+      transform: translateX(-50%);
+      text-align: center;
+      color: #b0986f;
+      font-size: 2rem;
+      font-weight: 600;
+      font-style: oblique;
+      text-shadow: 0px 0px 5px #b0986f;
+      transition: all 4s;
+    }
+
+    #radial .item .line {
+      height: 250px;
+      width: 2px;
+      margin: 0 auto;
+      background: #b0986f;
+      /* background: -webkit-linear-gradient(#CC9900, #CC9966); */
+      transition: all 4s;
+    }
+
+    #radial .item .number {
+      margin-top: 10px;
+      transition: all 4s;
+    }
+  </style>
+</head>
+
+<body>
+  <section id="radial">
+    <img src="./center.png" alt="40th" class="center">
+  </section>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/lodash.js/4.17.10/lodash.min.js"></script>
+  <script>
+    //画布
+    const $radial = $('#radial');
+
+    //数字集合
+    const th = _.range(40);
+
+    //所有节点
+    let itemNodes = null;
+    let lineNodes = null;
+    let numberNodes = null;
+
+    //line最低长度
+    const lowerHeight = 130;
+
+    //字体大小上限
+    const maxFontSize = 50;
+
+    /**
+    * 生成随机数
+    **/
+    const random = (lower, upper) => {
+      return Math.floor(Math.random() * (upper - lower) + lower);
+    };
+
+    /**
+    * 上限修正
+    **/
+    const correct = (index) => {
+      let h = {
+        0: 235,
+        1: 240,
+        2: 250,
+        3: 265,
+        4: 300,
+        5: 350,
+        6: 430,
+        7: 500,
+        8: 470,
+        9: 445,
+        10: 440,
+        11: 445,
+        12: 460,
+        13: 500,
+        14: 430,
+        15: 350,
+        16: 300,
+        17: 265,
+        18: 250,
+        19: 240,
+        20: 235,
+        30: 440,
+        31: 445,
+        32: 460,
+        33: 500,
+        34: 430,
+        35: 350,
+        36: 300,
+        37: 265,
+        38: 250,
+        39: 240
+      };
+      return h[index] ? h[index] : h[index % 10];
+    };
+
+    /**
+    * 动画
+    **/
+    const animate = () => {
+      let all = _.concat(th);
+      let section = 360 / all.length;
+
+      _.each(_.concat(th), (item) => {
+        const r = _.pullAt(all, all.indexOf(_.sample(all)))[0];
+        const $item = itemNodes.eq(r);
+        const $line = lineNodes.eq(r);
+        const $number = numberNodes.eq(r);
+
+        const h = correct(item); //长度上限
+        const r2 = random(lowerHeight, h); //随机化长度
+        const p = r2 / h; //随机化比例,同比例处理透明度与字体大小
+
+        $number.css({
+          'transform': 'rotate(' + (360 - item * section) + 'deg)',
+          'font-size': maxFontSize * p + 'px'
+        });
+        $line.css({ 'height': r2 + 'px' });
+        $item.css({ 'transform': 'rotate(' + (item * section) + 'deg) translateX(-50%)', 'opacity': p });
+      });
+    };
+
+
+    /**
+    * 事件
+    **/
+    const handleClick = (e) => {
+    };
+
+    /**
+    * 初始化
+    **/
+    const init = () => {
+      const html = [];
+      _.each(th, (item) => {
+        html.push(`<div class="item">
+                    <div class="line"></div>
+                    <div class="number">${item + 1}</div>
+                  </div>`);
+      });
+      $radial.append(html.join(''));
+
+      itemNodes = $('.item');
+      lineNodes = $('.item .line');
+      numberNodes = $('.item .number');
+
+      animate();
+      setInterval(animate, 5.5 * 1000);
+    };
+
+    init();
+  </script>
+</body>
+
+</html>

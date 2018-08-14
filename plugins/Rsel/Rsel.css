@@ -1,0 +1,180 @@
+/* 设置inline-block使label支持after且保持radio、checkbox布局方式 */
+.R-label {
+  display: inline-block;
+}
+
+/* 强制box-sizing，避免被重置 */
+
+.R-label * {
+  box-sizing: content-box !important;
+}
+
+/* 将radio、checkbox不显示，但还能交互 */
+
+.R-radio {
+  visibility: hidden;
+  width: 0;
+}
+
+/* 设置展示的样式 */
+
+.R-radioInput {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 100%;
+  display: inline-block;
+  height: 16px;
+  margin-right: 10px;
+  margin-top: -1px;
+  vertical-align: middle;
+  width: 16px;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.R-radio:checked + .R-radioInput:after {
+  background-color: #0099ff;
+  border-radius: 100%;
+  content: '';
+  display: inline-block;
+  height: 12px;
+  margin: 2px;
+  width: 12px;
+}
+
+/* checkbox与radio略有不同 */
+.R-checkbox.R-radioInput,
+.R-radio:checked + .R-checkbox.R-radioInput:after {
+  border-radius: 0;
+}
+
+.Rsel-Container {
+  height: 300px;
+  width: 600px;
+}
+
+.Rsel-Container * {
+  box-sizing: content-box;
+}
+
+.Rsel-Container > div {
+  display: inline-block;
+  height: 100%;
+  width: 250px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  vertical-align: top;
+}
+
+.Rsel-Container > div .title {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 15px;
+  color: #666666;
+  font-size: 13px;
+  background: #eeeeee;
+  border-bottom: 1px solid #ddd;
+}
+
+.Rsel-Container > div .search {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  text-align: center;
+}
+
+.Rsel-Container > div .search .searchInput {
+  height: 25px;
+  padding-left: 5px;
+  width: calc(100% - 10px);
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #666666;
+}
+
+.Rsel-Container > div .wrapper {
+  width: 250px;
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.Rsel-Container > div .content {
+  width: 250px;
+  height: 200px;
+  padding: 5px 10px 5px 10px;
+  overflow-y: scroll;
+}
+
+.Rsel-Container > div .content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.Rsel-Container > div .content ul > li {
+  line-height: 20px;
+  padding: 5px 0;
+  padding-left: 5px;
+  font-size: 13px;
+  color: #666666;
+}
+
+.Rsel-Container > div .content ul > li:hover {
+  background: #eeeeee;
+}
+
+.Rsel-Container > div .content ul > li > .R-label {
+  float: right;
+}
+
+.Rsel-Container > div .content ul > li.ac ul {
+  display: block;
+}
+
+.Rsel-Container > div .content ul > li ul {
+  margin: 10px 0 0 10px;
+  display: none;
+}
+
+.Rsel-Container > div .toolbar {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 10px;
+  padding-right: 7px;
+  border-top: 1px solid #ddd;
+  font-size: 13px;
+  color: #666666;
+}
+
+.Rsel-Container > div .toolbar .checkAll {
+  float: right;
+  color: #1482ff;
+  cursor: pointer;
+}
+
+.Rsel-Container > div .toolbar .clearBtn {
+  float: right;
+  color: #1482ff;
+  cursor: pointer;
+}
+
+.Rsel-Container > div .Rsel-del {
+  float: right;
+  height: 20px;
+  width: 20px;
+  display: block;
+  color: #ddd;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 1s;
+  text-align: center;
+}
+
+.Rsel-Container > div .Rsel-del:hover,
+.Rsel-Container > div .Rsel-del:active {
+  color: #cc3300;
+}

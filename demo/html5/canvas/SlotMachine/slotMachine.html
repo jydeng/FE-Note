@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SlotMachine</title>
+  <style>
+    body {
+      background: gray;
+    }
+
+    #test {
+      background: #fff;
+      width: 100%;
+      max-width: 551px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="test" width="533" height="411">
+    您的浏览器不支持Canvas,现在都什么年代了
+  </canvas>
+  <script>
+    ; (function () {
+      let canvas = document.querySelector('#test');
+      //引入缩放比例计算，兼容多种终端
+      let scaling = {
+        w: canvas.clientWidth / canvas.width,
+        h: canvas.clientHeight / canvas.height
+      };
+      if (canvas.getContext) {
+        let ctx = canvas.getContext('2d');
+        let bg = new Image();
+        let imgs = {
+          left: new Image(),
+          middle: new Image(),
+          right: new Image()
+        };
+        let flag = {
+          left: 1,
+          middle: 1,
+          right: 1,
+          max: 6
+        };
+        let ps = {
+          left: [70, 160],
+          middle: [185, 160],
+          right: [295, 160]
+        };
+        let interval = 1000 / 10;
+        let timer = {
+          left: null,
+          middle: null,
+          right: null
+        };
+
+        //绘制图片
+        function drawImg(img, x, y) {
+          ctx.drawImage(img, x, y, img.width, img.height);
+        }
+
+        //绘制背景
+        function drawBg(img) {
+          let pattern = ctx.createPattern(img, 'no-repeat');
+          ctx.fillStyle = pattern;
+          ctx.fillRect(0, 0, 533, 411);
+        }
+
+        //绘制图片边框
+        function drawBorder(x, y, w, h) {
+          ctx.save();
+          ctx.strokeStyle = '#000000';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(x, y, w, h);
+          ctx.restore();
+        }
+
+        //判断点击是否在图片范围内
+        function isPointInPath(x, y, x1, y1) {
+          return x <= x1 && x + 100 >= x1 && y <= y1 && y + 100 >= y1;
+        }
+
+        //动画开始
+        function start(key) {
+          timer[key] = setInterval(function () {
+            flag[key] === flag.max ? flag[key] = 1 : flag[key]++;
+            imgs[key].src = './img/slot' + flag[key] + '.png';
+          }, interval);
+        }
+
+        //动画停止
+        function stop(key) {
+          clearInterval(timer[key]);
+          timer[key] = null;
+        }
+
+        //初始化
+        function init() {
+          bg.src = './img/machine.png';
+          bg.onload = () => {
+            drawBg(bg);
+            drawBorder(ps.left[0], ps.left[1], 100, 100);
+            drawBorder(ps.middle[0], ps.middle[1], 100, 100);
+            drawBorder(ps.right[0], ps.right[1], 100, 100);
+            imgs.left.src = './img/slot6.png';
+            imgs.left.onload = () => {
+              drawImg(imgs.left, ps.left[0], ps.left[1]);
+            };
+
+            imgs.middle.src = './img/slot6.png';
+            imgs.middle.onload = () => {
+              drawImg(imgs.middle, ps.middle[0], ps.middle[1]);
+            };
+
+            imgs.right.src = './img/slot6.png';
+            imgs.right.onload = () => {
+              drawImg(imgs.right, ps.right[0], ps.right[1]);
+            };
+          };
+
+          canvas.addEventListener('click', function (e) {
+            //引入缩放比例计算，兼容多种终端
+            let x1 = e.offsetX / scaling.w;
+            let y1 =  e.offsetY / scaling.h;
+
+            for (let key in ps) {
+              if (ps.hasOwnProperty(key)) {
+                let item = ps[key];
+
+                if (!isPointInPath(item[0], item[1], x1, y1)) continue;
+
+                if (timer[key]) {
+                  stop(key);
+                } else {
+                  start(key);
+                }
+              }
+            }
+          });
+        }
+
+        init();
+      }
+    })();
+  </script>
+</body>
+
+</html>

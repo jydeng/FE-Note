@@ -1,0 +1,25 @@
+.Rfile {
+  display: inline-block;
+  height: 32px;
+  line-height: 30px;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 12px;
+  text-align: center;
+  font-family: '微软雅黑';
+  color: #666;
+  cursor: pointer;
+  transition: all 1s;
+  box-shadow: 1px 1px 1px 1px #eee;
+}
+
+.Rfile:hover {
+  color: #0099FF;
+  border-color: rgba(0, 153, 255, 0.6);
+  background: rgba(0, 153, 255, 0.1);
+}
+
+.Rfile:active {
+  box-shadow: 1px 1px 1px 3px #ddd;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>文件选择框CSS美化</title>
+    <link rel="stylesheet" href="./Rfile.css">
+</head>
+
+<body>
+    <input type="file" id="adFile" />
+    <script src="https://cdn.bootcss.com/jquery/1.10.0/jquery.js"></script>
+    <script src="./Rfile.js"></script>
+    <script>
+        ;
+        (function ($) {
+            $('#adFile').Rfile({
+                multiple: true,
+                accept: ['.jpg', '.png'],
+                selected: function (allow, notallow) {
+                }
+            });
+        })(jQuery);
+    </script>
+</body>
+
+</html>

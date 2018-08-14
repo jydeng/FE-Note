@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>音阶导航</title>
+  <style>
+    ul {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    ul li {
+      display: inline-block;
+      position: relative;
+      padding: 10px 20px;
+      box-sizing: border-box;
+      overflow: hidden;
+      vertical-align: middle;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      transition: 1s all;
+    }
+
+    ul li:hover .down {
+      bottom: 0;
+      opacity: .5;
+    }
+
+    .down {
+      position: absolute;
+      bottom: -100%;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: #6699FF;
+      transition: .5s;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <audio></audio>
+  <ul>
+    <li data-flag="a">
+      导航一
+      <div class="down"></div>
+    </li>
+    <li data-flag="b">
+      导航二
+      <div class="down"></div>
+    </li>
+    <li data-flag="c">
+      导航三
+      <div class="down"></div>
+    </li>
+    <li data-flag="d">
+      导航四
+      <div class="down"></div>
+    </li>
+    <li data-flag="e">导航五
+      <div class="down"></div>
+    </li>
+    <li data-flag="f">导航六
+      <div class="down"></div>
+    </li>
+    <li data-flag="g">
+      导航七
+      <div class="down"></div>
+    </li>
+  </ul>
+  <script>
+    ; (function () {
+      const liNodes = document.querySelectorAll('ul>li');
+      const audio = document.querySelector('audio');
+      for (let index = 0; index < liNodes.length; index++) {
+        const element = liNodes[index];
+        element.addEventListener('mouseenter', function () {
+          var flag = this.getAttribute('data-flag');
+          if (flag) {
+            audio.src = 'http://s8.qhimg.com/share/audio/piano1/' + flag + '4.mp3';
+            audio.play();
+          }
+        });
+        element.addEventListener('mouseleave', function () {
+          audio.pause();
+        });
+      }
+    })();
+  </script>
+</body>
+
+</html>
