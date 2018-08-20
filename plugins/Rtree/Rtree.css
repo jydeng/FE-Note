@@ -1,0 +1,136 @@
+/* 设置inline-block使label支持after且保持radio、checkbox布局方式 */
+.R-label {
+  display: inline-block;
+}
+
+/* 强制box-sizing，避免被重置 */
+
+.R-label * {
+  box-sizing: content-box !important;
+}
+
+/* 将radio、checkbox不显示，但还能交互 */
+
+.R-radio {
+  visibility: hidden;
+  width: 0;
+}
+
+/* 设置展示的样式 */
+
+.R-radioInput {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 100%;
+  display: inline-block;
+  height: 16px;
+  margin-right: 10px;
+  margin-top: -1px;
+  vertical-align: middle;
+  width: 16px;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.R-radio:checked + .R-radioInput:after {
+  background-color: #0099ff;
+  border-radius: 100%;
+  content: '';
+  display: inline-block;
+  height: 12px;
+  margin: 2px;
+  width: 12px;
+}
+
+/* checkbox与radio略有不同 */
+.R-checkbox.R-radioInput,
+.R-radio:checked + .R-checkbox.R-radioInput:after {
+  border-radius: 0;
+}
+
+.Rtree-Container {
+  min-height: 400px;
+  width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.Rtree-Container * {
+  box-sizing: content-box;
+}
+
+.Rtree-Container > .title {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 15px;
+  color: #666666;
+  font-size: 13px;
+  background: #eeeeee;
+  border-bottom: 1px solid #ddd;
+}
+
+.Rtree-Container > .search {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  text-align: center;
+}
+
+.Rtree-Container > .search .searchInput {
+  height: 25px;
+  padding-left: 5px;
+  width: calc(100% - 10px);
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #666666;
+}
+
+.Rtree-Container > .toolbar {
+  height: 30px;
+  line-height: 30px;
+  padding-left: 10px;
+  padding-right: 7px;
+  border-top: 1px solid #ddd;
+  font-size: 13px;
+  color: #666666;
+}
+
+.Rtree-Container > .content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.Rtree-Container > .content {
+  min-height: 325px;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.Rtree-Container > .content ul > li {
+  line-height: 20px;
+  padding: 5px 0;
+  padding-left: 5px;
+  font-size: 13px;
+  color: #666666;
+}
+
+.Rtree-Container > .content  ul > li:hover {
+  background: #eeeeee;
+}
+
+.Rtree-Container > .content ul > li > .R-label {
+  float: right;
+}
+
+.Rtree-Container > .content ul > li.ac ul {
+  display: block;
+}
+
+.Rtree-Container > .content ul > li ul {
+  margin: 10px 0 0 10px;
+  display: none;
+}
