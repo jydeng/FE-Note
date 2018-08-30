@@ -67,11 +67,36 @@
       border-right: 4px solid transparent;
       border-top: 4px solid #fff;
     }
+
+    .searchPanel {
+      padding: 10px;
+    }
+
+    .searchPanel input {
+      height: 20px;
+      line-height: 20px;
+    }
+
+    .searchPanel label {
+      font-weight: 600;
+    }
   </style>
 </head>
 
 <body>
   <div id="app">
+    <div class="searchPanel">
+      <label for="age">age：</label>
+      <select id="age" v-model="age" style="height:25px;line-height:25px;">
+        <option value="0">all</option>
+        <option value="18"> <= 18 </option>
+        <option value="24"> <= 24 </option>
+        <option value="30"> <= 30 </option>
+      </select>
+      <label for="name">name：</label>
+      <input type="text" id="name" v-model="name" style="width:155px;">
+    </div>
+
     <vue-table :data="data" :columns="columns"></vue-table>
   </div>
 
@@ -122,7 +147,7 @@
         },
         computed: {
           filterData() {
-            return this.sort ? (this.orders[this.sort]  === 'asc' ? _.sortBy(this.data, this.sort) : _.reverse(_.sortBy(this.data, this.sort))) : this.data;
+            return this.sort ? (this.orders[this.sort] === 'asc' ? _.sortBy(this.data, this.sort) : _.reverse(_.sortBy(this.data, this.sort))) : this.data;
           }
         },
         methods: {
@@ -137,11 +162,34 @@
         el: '#app',
         data: {
           columns: ['name', 'age'],
-          data: [
+          allData: [
             { name: 'Roy', age: 18 },
             { name: 'Wendy', age: 26 },
-            { name: 'Bob', age: 20 }
-          ]
+            { name: 'Bob', age: 20 },
+          ],
+          age: 0,
+          name: ''
+        },
+        methods: {
+          handleSearch() {
+            console.log(this.age, this.name);
+          }
+        },
+        computed: {
+          data() {
+            var result = this.allData.filter(item => {
+              if (parseInt(this.age) && item.age > parseInt(this.age)) {
+                return false;
+              }
+
+              if (this.name && (!~item.name.indexOf(this.name))) {
+                return false;
+              }
+
+              return true;
+            });
+            return result;
+          }
         }
       });
     })();
