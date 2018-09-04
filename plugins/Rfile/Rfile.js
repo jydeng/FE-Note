@@ -24,9 +24,10 @@
       if (options.limitSize > 0 && f.size > options.limitSize) {
         notallow.push({
           name: f.name,
-          msg: `文件大小超过限制,允许的大小:${options.limitSize},实际大小:${
-            f.size
-          }KB`
+          msg:
+            '文件大小超过限制,允许的大小:${options.limitSize},实际大小:' +
+            f.size +
+            'KB'
         });
         continue;
       }
@@ -37,9 +38,11 @@
       ) {
         notallow.push({
           name: f.name,
-          msg: `文件类型不允许,允许的文件类型:${options.accept.join(
-            ','
-          )},实际文件类型:${f.name.split('.').pop()}`
+          msg:
+            '文件类型不允许,允许的文件类型:' +
+            options.accept.join(',') +
+            ',实际文件类型:' +
+            f.name.split('.').pop()
         });
         continue;
       }
@@ -51,9 +54,15 @@
       ) {
         notallow.push({
           name: f.name,
-          msg: `文件尺寸不匹配,要求的分辨率:${options.width +
+          msg:
+            '文件尺寸不匹配,要求的分辨率:' +
+            options.width +
             '*' +
-            options.height},实际尺寸:${f.width + '*' + f.height}`
+            options.height +
+            ',实际尺寸:' +
+            f.width +
+            '*' +
+            f.height
         });
         continue;
       }
@@ -106,11 +115,11 @@
                 let height = image.height;
                 loaded++;
                 allFiles.push({
-                  size,
-                  name,
-                  width,
-                  height,
-                  data
+                  size: size,
+                  name: name,
+                  width: width,
+                  height: height,
+                  data: data
                 });
 
                 //使用计数器,当所有图片加载完毕，调用验证方法
