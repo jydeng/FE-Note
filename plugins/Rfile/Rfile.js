@@ -25,7 +25,9 @@
         notallow.push({
           name: f.name,
           msg:
-            '文件大小超过限制,允许的大小:${options.limitSize},实际大小:' +
+            '文件大小超过限制,允许的大小:' +
+            options.limitSize +
+            ',实际大小:' +
             f.size +
             'KB'
         });
@@ -34,7 +36,7 @@
 
       if (
         options.accept.length > 0 &&
-        options.accept.indexOf(f.name.split('.').pop()) === -1
+        options.accept.indexOf('.' + f.name.split('.').pop()) === -1
       ) {
         notallow.push({
           name: f.name,

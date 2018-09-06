@@ -11,6 +11,7 @@
 
 <body>
     <input type="file" id="adFile" />
+    <input type="file" id="adFile2" />
     <script src="https://cdn.bootcss.com/jquery/1.10.0/jquery.js"></script>
     <script src="./Rfile.js"></script>
     <script>
@@ -20,7 +21,14 @@
                 multiple: true,
                 accept: ['.jpg', '.png'],
                 selected: function (allow, notallow) {
-                    console.log(allow)
+                    console.log('adFile')
+                }
+            });
+            $('#adFile2').Rfile({
+                multiple: true,
+                accept: ['.jpg', '.png'],
+                selected: function (allow, notallow) {
+                    console.log('adFile2')
                 }
             });
         })(jQuery);
