@@ -6,21 +6,23 @@
   top: 0;
   opacity: 0.3;
   background-color: black;
-  z-index: -1;
+  z-index: 2;
+  display: none;
 }
 .Rtable-wrapper{
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
-  width: 400px;
-  height: 400px;
+  width: 500px;
+  height: 420px;
   background: #ffffff;
   padding-bottom: 50px;
   z-index: 3;
   border: 1px solid #d2d2d2;
   border-radius: 3px;
   box-shadow: 1px 2px 5px #666;
+  display: none;
 }
 .Rtable-wrapper *{
   box-sizing: border-box;
@@ -28,6 +30,7 @@
 .Rtable-title{
   padding: 10px 15px;
   font-size: 14px;
+  background-color: #f2f2f2;
 }
 .Rtable-close{
   position: absolute;
@@ -45,6 +48,8 @@
 }
 .Rtable-search{
   padding: 0px 10px 10px 10px;
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #ddd;
 }
 .Rtable-OperationInput{
   height: 33px; 
@@ -60,19 +65,52 @@
   line-height: 33px;
   margin-left: 5px;
   font-size: 12px;
+  color: #fff;
   padding: 0 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #27b6af;
   border-radius: 3px;
   vertical-align: top;
+  cursor: pointer;
+  background-color: #27b6af;
 }
+.Rtable-OperationBtn:hover{
+  background: #52c5bf;
+  border-color: #52c5bf;
+}
+.Rtable-OperationBtn.disabled{
+  background: #ffffff;
+  color: #ddd;
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+
 .Rtable-body{
   height: calc(100% - 39px - 43px);
   overflow-y: auto;
 }
+.Rtable-body ul{
+  padding-left: 20px;
+  font-size: 13px;
+  margin: 5px 0;
+}
+.Rtable-body li{
+  list-style: none;
+  padding: 5px 0 5px 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-left: 3px solid #ddd;
+  transition: all 0.6s;
+}
+.Rtable-body li.ac{
+  border-left-color: #27b6af;
+  font-weight: 600;
+}
 .Rtable-footer{
   position: absolute;
   width: 100%;
-  bottom: 10px;
-  padding: 0 10px;
+  bottom: 0px;
+  padding: 10px;
   text-align: right;
+  background: #f2f2f2;
+  border-top:  1px solid #ddd;
 }

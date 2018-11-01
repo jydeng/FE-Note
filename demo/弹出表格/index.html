@@ -7,32 +7,32 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>弹出表格</title>
   <link rel="stylesheet" href="index.css">
-  <script src="./index.js"></script>
 </head>
 
 <body>
-  <button>弹出</button>
+  <button onclick="$('.Rtable-mask').show();$('.Rtable-wrapper').show();">弹出</button>
+
   <div class="Rtable-mask"></div>
-  <div class="Rtable-wrapper">
+  <div class="Rtable-wrapper" id="dmpSelect">
     <div class="Rtable-title">测试标题</div>
     <a class="Rtable-close"> x </a>
     <div class="Rtable-search">
-      <input type="text" class="Rtable-OperationInput"><a class="Rtable-OperationBtn">搜索</a>
+      <input type="text" class="Rtable-OperationInput input-name" placeholder="请输入dmpid或包名">
+      <a class="Rtable-OperationBtn search-btn">搜索</a>
+      <a class="Rtable-OperationBtn confirm-btn" style="display:none">确定</a>
+      <a class="Rtable-OperationBtn add-btn">直接绑定(不存在的dmpid)</a>
     </div>
     <div class="Rtable-body">
-      <ul>
-        <li>1</li>
-        <li>1</li>
-        <li>1</li>
-        <li>1</li>
-        <li>1</li>
+      <ul class="Rtable-data">
       </ul>
     </div>
     <div class="Rtable-footer">
-      <a class="Rtable-OperationBtn">上一页</a>
-      <a class="Rtable-OperationBtn">下一页</a>
+      <a class="Rtable-OperationBtn prev-btn">上一页</a>
+      <a class="Rtable-OperationBtn next-btn">下一页</a>
     </div>
   </div>
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script src="./index.js"></script>
 </body>
 
 </html>
