@@ -1,0 +1,13 @@
+body{
+  background-image: url(./img/puckered.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+#first{
+  background-image: url(./img/smashing-logo.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}
