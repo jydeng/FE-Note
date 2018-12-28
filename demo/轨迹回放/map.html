@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      body,
+      html,
+      #allmap {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+        font-family: "微软雅黑";
+      }
+      .tool {
+        position: absolute;
+        padding: 15px;
+        z-index: 99;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        left: 50%;
+        bottom: 10px;
+        transform: translateX(-50%);
+      }
+      .tool div {
+        margin-top: 5px;
+      }
+    </style>
+    <title>轨迹回放</title>
+    <script
+      type="text/javascript"
+      src="http://api.map.baidu.com/api?v=2.0&ak=E06eb9d756d0eafc722effb355657b4c"
+    ></script>
+    <script
+      type="text/javascript"
+      src="http://api.map.baidu.com/library/CurveLine/1.5/src/CurveLine.min.js"
+    ></script>
+  </head>
+
+  <body>
+    <div class="tool">
+      <div>
+        <button id="start">开始</button>
+        <button id="pause" disabled>暂停</button>
+        <button id="reset" disabled>重置</button>
+      </div>
+      <div>
+        <button id="speed1" disabled>1x</button>
+        <button id="speed2" disabled>2x</button>
+        <button id="speed3" disabled>3x</button>
+        <button id="speed5" disabled>5x</button>
+      </div>
+    </div>
+    <div id="allmap"></div>
+  </body>
+</html>
+
+<script>
+  var map = new BMap.Map("allmap");
+  map.centerAndZoom(new BMap.Point(116.404, 39.915), 6);
+  map.enableScrollWheelZoom(true);
+
+  var planeIcon = new BMap.Icon("./favicon.ico", new BMap.Size(37, 25), {
+    imageOffset: new BMap.Size(0, 0)
+  });
+
+  var lineStyle = {
+    strokeColor: "green",
+    strokeWeight: 3,
+    strokeOpacity: 1
+  };
+
+  var coordinate = [
+    {
+      lng: 116.424391,
+      lat: 39.917591
+    },
+    {
+      lng: 117.215475,
+      lat: 39.008472
+    },
+    {
+      lng: 121.469849,
+      lat: 31.275075
+    },
+    {
+      lng: 121.469849,
+      lat: 31.275075
+    },
+    {
+      lng: 113.30145,
+      lat: 23.22806
+    },
+    {
+      lng: 108.370974,
+      lat: 22.853459
+    },
+    {
+      lng: 106.641628,
+      lat: 26.682563
+    },
+    {
+      lng: 103.992417,
+      lat: 30.609036
+    },
+    {
+      lng: 108.922893,
+      lat: 34.381104
+    },
+    {
+      lng: 108.922893,
+      lat: 34.381104
+    },
+    {
+      lng: 116.424391,
+      lat: 39.917591
+    }
+  ];
+  var plane = null;
+  var lines = [];
+  var timer = null;
+  var count = 0;
+  var speed = 5;
+  var index = 0;
+
+  function markline(lng1, lat1, lng2, lat2) {
+    var line = new BMapLib.CurveLine(
+      [new BMap.Point(lng1, lat1), new BMap.Point(lng2, lat2)],
+      lineStyle
+    );
+    lines.push(line);
+    map.addOverlay(line);
+  }
+
+  function markplane(lng, lat) {
+    if (plane) {
+      map.removeOverlay(plane);
+    }
+    plane = new BMap.Marker(new BMap.Point(lng, lat), {
+      icon: planeIcon,
+      rotation: Math.round(Math.random() * 90)
+    });
+    map.addOverlay(plane);
+  }
+
+  function play(callback) {
+    timer = setInterval(function() {
+      count++;
+      if (count % speed === 0) {
+        callback();
+        index++;
+      }
+    }, 500);
+  }
+
+  document.querySelector("#start").addEventListener("click", function() {
+    document.querySelector("#start").setAttribute("disabled", true);
+    document.querySelector("#pause").removeAttribute("disabled");
+    document.querySelector("#reset").removeAttribute("disabled");
+    document.querySelector("#speed1").setAttribute("disabled", true);
+    document.querySelector("#speed2").removeAttribute("disabled");
+    document.querySelector("#speed3").removeAttribute("disabled");
+    document.querySelector("#speed5").removeAttribute("disabled");
+
+    play(function() {
+      var end = coordinate[index];
+      var start = index > 0 ? coordinate[index - 1] : false;
+
+      if (end) {
+        markplane(end.lng, end.lat);
+      }
+
+      if (start && end) {
+        markline(start.lng, start.lat, end.lng, end.lat);
+      }
+
+      if (index === coordinate.length) {
+        clearInterval(timer);
+        document.querySelector("#pause").setAttribute("disabled", true);
+      }
+    });
+  });
+
+  document.querySelector("#pause").addEventListener("click", function() {
+    document.querySelector("#pause").setAttribute("disabled", true);
+    document.querySelector("#start").removeAttribute("disabled");
+    clearInterval(timer);
+  });
+
+  document.querySelector("#reset").addEventListener("click", function() {
+    document.querySelector("#reset").setAttribute("disabled", true);
+    document.querySelector("#pause").setAttribute("disabled", true);
+    document.querySelector("#start").removeAttribute("disabled");
+    document.querySelector("#speed1").setAttribute("disabled", true);
+    document.querySelector("#speed2").setAttribute("disabled", true);
+    document.querySelector("#speed3").setAttribute("disabled", true);
+    document.querySelector("#speed5").setAttribute("disabled", true);
+    index = 0;
+    count = 0;
+    plane = null;
+    lines = [];
+    map.clearOverlays();
+  });
+
+  document.querySelector("#speed1").addEventListener("click", function() {
+    document.querySelector("#speed1").setAttribute("disabled", true);
+    document.querySelector("#speed2").removeAttribute("disabled");
+    document.querySelector("#speed3").removeAttribute("disabled");
+    document.querySelector("#speed5").removeAttribute("disabled");
+    speed = 5;
+  });
+
+  document.querySelector("#speed2").addEventListener("click", function() {
+    document.querySelector("#speed1").removeAttribute("disabled");
+    document.querySelector("#speed2").setAttribute("disabled", true);
+    document.querySelector("#speed3").removeAttribute("disabled");
+    document.querySelector("#speed5").removeAttribute("disabled");
+    speed = 3;
+  });
+
+  document.querySelector("#speed3").addEventListener("click", function() {
+    document.querySelector("#speed1").removeAttribute("disabled");
+    document.querySelector("#speed2").removeAttribute("disabled");
+    document.querySelector("#speed3").setAttribute("disabled", true);
+    document.querySelector("#speed5").removeAttribute("disabled");
+    speed = 2;
+  });
+
+  document.querySelector("#speed5").addEventListener("click", function() {
+    document.querySelector("#speed1").removeAttribute("disabled");
+    document.querySelector("#speed2").removeAttribute("disabled");
+    document.querySelector("#speed3").removeAttribute("disabled");
+    document.querySelector("#speed5").setAttribute("disabled", true);
+    speed = 1;
+  });
+</script>
