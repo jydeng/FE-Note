@@ -1,10 +1,11 @@
-## front-end-note
+## FrontEndNote
 
-随手写点
+深入学习原理知识、交互以及各种效果。
 
-### 目录
+## 文件目录
 
-- /
-  - /plugin
-  - /demo
-  - ......
+- demo
+- JavaScript 相关
+- plugin
+- Vue 相关
+- More.....
