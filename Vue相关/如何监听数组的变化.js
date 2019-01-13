@@ -14,7 +14,15 @@
 // 具体如何实现的呢？
 // ES5及以下的JS无法完美继承数组，可以用以下方法实现
 (async () => {
-  const aryMethods = ["push", "pop", "shift", "unshift", "splice", "sort", "reverse"];
+  const aryMethods = [
+    "push",
+    "pop",
+    "shift",
+    "unshift",
+    "splice",
+    "sort",
+    "reverse"
+  ];
   const arrayAugmentations = [];
 
   aryMethods.forEach(method => {
