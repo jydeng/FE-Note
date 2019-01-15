@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>provide&inject</title>
+  </head>
+  <body>
+    <div id="app"><va></va></div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      // provide & inject 主要使用的场景
+      // 具有联动关系的组件，例如Form与FormItem，FormItem依赖Form上的props
+      // Form 与 FormItem 可能并不是父子关系，不能简单的使用$parent来获取
+      // Form组件使用provide 分发 this，FormItem通过inject app 可以方便的访问
+      Vue.component("va", {
+        template: `<div>
+          {{lab}}
+           <vb></vb>
+          </div>`,
+        provide() {
+          // 将this provide出去
+          return {
+            name: "Roy",
+            app: this
+          };
+        },
+        data() {
+          return {
+            lab: "我是A"
+          };
+        }
+      });
+      Vue.component("vb", {
+        template: `<div>我是B</div>`,
+        inject: ["name", "app"],
+        mounted() {
+          // 可以通过inject app 访问到父、祖父等组件，甚至可以访问它们的方法
+          this.app.lab = "在子组件中尝试改变父组件的值";
+        }
+      });
+
+      const app = new Vue({
+        el: "#app"
+      });
+    </script>
+  </body>
+</html>

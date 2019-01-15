@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>dispatch&broadcast</title>
+  </head>
+
+  <body>
+    <div id="app"><va> </va></div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      // 实现一个事件订阅发布机制，通过mixins注入，broadcast发布，$on订阅
+      function broadcast(componentName, eventName, params) {
+        this.$children.forEach(child => {
+          const name = child.$options.name;
+
+          if (name === componentName) {
+            child.$emit.apply(child, [eventName].concat(params));
+          } else {
+            broadcast.apply(child, [componentName, eventName].concat([params]));
+          }
+        });
+      }
+
+      const Emitter = {
+        methods: {
+          dispatch(componentName, eventName, params) {
+            let parent = this.$parent || this.$root;
+            let name = parent.$options.name;
+
+            while (parent && (!name || name !== componentName)) {
+              parent = parent.$parent;
+
+              if (parent) {
+                name = parent.$options.name;
+              }
+            }
+            if (parent) {
+              parent.$emit.apply(parent, [eventName].concat(params));
+            }
+          },
+          broadcast(componentName, eventName, params) {
+            broadcast.call(this, componentName, eventName, params);
+          }
+        }
+      };
+
+      Vue.component("va", {
+        template: `<div><button @click="handleClick">点击</button><vb></vb></div>`,
+        mixins: [Emitter],
+        methods: {
+          handleClick() {
+            // 分发事件
+            this.broadcast("vb", "on-message", "Hello Vue.js");
+          }
+        }
+      });
+      Vue.component("vb", {
+        template: `<div></div>`,
+        created() {
+          // 订阅事件
+          this.$on("on-message", this.showMessage);
+        },
+        methods: {
+          showMessage(text) {
+            window.alert(text);
+          }
+        }
+      });
+      
+      const app = new Vue({
+        el: "#app"
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>mixins</title>
+  </head>
+
+  <body>
+    <div id="app"><va></va></div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      // 通过mixins可以将复杂的业务逻辑|可复用的模块分布到多个文件中，然后通过minxins引入
+      var mixin = {
+        methods: {
+          getInfo() {
+            console.log("getinfo!");
+          }
+        },
+        mounted() {
+          console.log("这里是mixin内容");
+        }
+      };
+      Vue.component("va", {
+        template: `<div>A组件</div>`,
+        mixins: [mixin],
+        mounted() {
+          this.getInfo();
+        }
+      });
+      const app = new Vue({
+        el: "#app"
+      });
+    </script>
+  </body>
+</html>
