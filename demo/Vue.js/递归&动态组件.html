@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>递归&动态组件</title>
+  </head>
+  <body>
+    <div id="app">
+      递归组件 <dg></dg> 动态组件
+      <button @click="handleChange('A')">显示A组件</button>
+      <button @click="handleChange('B')">显示B组件</button>
+      <button @click="handleChange('C')">显示C组件</button>
+      <keep-alive> <component :is="component"></component> </keep-alive>
+    </div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      Vue.component("va", {
+        template: `<div>组件A</div>`,
+        mounted() {
+          console.log("组件A被创建了");
+        }
+      });
+      Vue.component("vb", {
+        template: `<div>组件B</div>`,
+        mounted() {
+          console.log("组件B被创建了");
+        }
+      });
+      Vue.component("vc", {
+        template: `<div>组件C</div>`,
+        mounted() {
+          console.log("组件C被创建了");
+        }
+      });
+      Vue.component("dg", {
+        template: `<div>
+        {{count}}
+          <dg :count="count+1" v-if="count<=5"></dg>
+        </div>`,
+        props: {
+          count: {
+            type: Number,
+            default: 1
+          }
+        }
+      });
+      const app = new Vue({
+        el: "#app",
+        data: {
+          component: "va"
+        },
+        methods: {
+          handleChange(component) {
+            if (component === "A") {
+              this.component = "va";
+            } else if (component === "B") {
+              this.component = "vb";
+            } else if (component === "C") {
+              this.component = "vc";
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

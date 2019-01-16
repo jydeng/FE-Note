@@ -18,7 +18,7 @@
       Vue.component("va", {
         template: `<div>
           {{lab}}
-           <vb></vb>
+           <vb :title="'Roy'"></vb>
           </div>`,
         provide() {
           // 将this provide出去
@@ -34,7 +34,12 @@
         }
       });
       Vue.component("vb", {
-        template: `<div>我是B</div>`,
+        template: `<div>我是{{title}}</div>`,
+        props:{
+          title:{
+            type: [String,Number]
+          }
+        },
         inject: ["name", "app"],
         mounted() {
           // 可以通过inject app 访问到父、祖父等组件，甚至可以访问它们的方法

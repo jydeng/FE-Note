@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>extend&$mount</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      // Vue.extend 一样能实现$mount功能
+      const AlertComponent = Vue.extend({
+        template: `<div>{{message}}</div>`,
+        data() {
+          return {
+            message: "hello，Roy!"
+          };
+        }
+      });
+
+      let component = new AlertComponent().$mount("#app");
+
+      setTimeout(() => {
+        component.$el.remove();
+        component.$destroy();
+        component = null;
+      }, 3 *1000);
+    </script>
+  </body>
+</html>
