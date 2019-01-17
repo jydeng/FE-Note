@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>sync修饰符</title>
+  </head>
+
+  <body>
+    <div id="app"><va :value.sync="value"></va>{{ value }}</div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      Vue.component("va", {
+        template: `<div>
+                        <button @click="increase(-1)">减 1</button>
+                        <span style="color: red;padding: 6px">{{ value }}</span>
+                        <button @click="increase(1)">加 1</button>
+                  </div>`,
+        props: {
+          value: {
+            type: Number
+          }
+        },
+        methods: {
+          increase(val) {
+            this.$emit("update:value", this.value + val);
+          }
+        }
+      });
+      const app = new Vue({
+        el: "#app",
+        data: {
+          value: 1
+        }
+      });
+    </script>
+  </body>
+</html>
