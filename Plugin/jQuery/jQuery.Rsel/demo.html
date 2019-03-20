@@ -1,86 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Rsel</title>
+    <link rel="stylesheet" href="./Rsel.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Rsel</title>
-  <link rel="stylesheet" href="./Rsel.css">
-</head>
+  <body>
+    <div id="box"></div>
+    <div style="padding:10px;">
+      <button id="getSelected">获取选中的项目</button>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/1.10.0/jquery.min.js"></script>
+    <script src="./Rsel.js"></script>
+    <script>
+      (function($) {
+        $("#box").Rsel("init", {
+          leftTitle: "可选兴趣词",
+          rightTitle: "已选兴趣词",
+          data: [
+            {
+              id: "10001",
+              name: "游戏",
+              child: [
+                { id: "10101", name: "休闲时间" },
+                { id: "10102", name: "跑酷竞速" },
+                { id: "10103", name: "宝石消除" },
+                { id: "10104", name: "网络游戏" },
+                { id: "10105", name: "动作射击" },
+                { id: "10106", name: "扑克棋牌" },
+                { id: "10107", name: "儿童益智" },
+                { id: "10108", name: "塔防守卫" },
+                { id: "10109", name: "体育格斗" },
+                { id: "10110", name: "角色扮演" },
+                { id: "10111", name: "经营策略" }
+              ]
+            }
+          ],
+          // checked: ["10111", "10001"]
+        });
 
-<body>
-  <div id="box"></div>
-  <div style="padding:10px;">
-    <button id="getSelected">获取选中的项目</button>
-  </div>
-  <script src="https://cdn.bootcss.com/jquery/1.10.0/jquery.min.js"></script>
-  <script src="./Rsel.js"></script>
-  <script>
-    (function ($) {
-      $('#box').Rsel('init', {
-        leftTitle: '可选兴趣词',
-        rightTitle: '已选兴趣词',
-        data: [{
-          id: '10001',
-          name: '游戏',
-          child: [{
-            id: '10101',
-            name: '休闲时间'
-          },
-          {
-            id: '10102',
-            name: '跑酷竞速',
-          },
-          {
-            id: '10103',
-            name: '宝石消除',
-          },
-          {
-            id: '10104',
-            name: '网络游戏',
-          },
-          {
-            id: '10105',
-            name: '动作射击',
-          }, {
-            id: '10106',
-            name: '扑克棋牌',
-          }, {
-            id: '10107',
-            name: '儿童益智',
-          }, {
-            id: '10108',
-            name: '塔防守卫',
-          }, {
-            id: '10109',
-            name: '体育格斗',
-          }, {
-            id: '10110',
-            name: '角色扮演',
-          }, {
-            id: '10111',
-            name: '经营策略',
-          }]
-        },
-        {
-          id: 'j',
-          name: '家装百货',
-          child: [{
-            id: 'ry',
-            name: '荣耀',
-          }],
-        }
-        ],
-        checked: ['10111', '10001']
-      });
-
-      $('#getSelected').on('click',function(){
-        alert('查看控制台');
-        console.log($('#box').Rsel('getSelected'));
-      })
-    })(jQuery);
-  </script>
-</body>
-
+        $("#getSelected").on("click", function() {
+          alert("查看控制台");
+          console.log($("#box").Rsel("getSelected"));
+        });
+      })(jQuery);
+    </script>
+  </body>
 </html>

@@ -12,8 +12,7 @@
 /* 将radio、checkbox不显示，但还能交互 */
 
 .R-radio {
-  visibility: hidden;
-  width: 0;
+  display: none;
 }
 
 /* 设置展示的样式 */
@@ -49,7 +48,7 @@
 }
 
 .Rsel-Container {
-  height: 300px;
+  height: 400px;
   width: 600px;
 }
 
@@ -66,15 +65,6 @@
   vertical-align: top;
 }
 
-.Rsel-Container > div .title {
-  height: 30px;
-  line-height: 30px;
-  padding-left: 15px;
-  color: #666666;
-  font-size: 13px;
-  background: #eeeeee;
-  border-bottom: 1px solid #ddd;
-}
 
 .Rsel-Container > div .search {
   height: 30px;
@@ -85,26 +75,16 @@
   text-align: center;
 }
 
-.Rsel-Container > div .search .searchInput {
-  height: 25px;
-  padding-left: 5px;
-  width: calc(100% - 10px);
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  font-size: 13px;
-  color: #666666;
-}
-
 .Rsel-Container > div .wrapper {
   width: 250px;
-  height: 200px;
+  height: 300px;
   overflow: hidden;
   position: relative;
 }
 
 .Rsel-Container > div .content {
   width: 250px;
-  height: 200px;
+  height: 300px;
   padding: 5px 10px 5px 10px;
   overflow-y: scroll;
 }

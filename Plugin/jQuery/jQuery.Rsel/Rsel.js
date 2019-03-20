@@ -20,36 +20,40 @@
               $this.addClass(settings.id);
               $this.addClass('Rsel-Container');
               $this.html(
-                  '<div class="Rsel-left">' +
-                  '<div class="title">' + settings.leftTitle + '</div>' +
+                '<div class="Rsel-left">' +
+                  '<div style="height: 30px;line-height: 30px;padding-left: 15px;color: #666666;font-size: 13px;background: #eeeeee;border-bottom: 1px solid #ddd;">' +
+                  settings.leftTitle +
+                  "</div>" +
                   '<div class="search">' +
-                  '<input type="text" class="searchInput">' +
-                  '</div>' +
+                  '<input class="searchInput" type="text" style="height: 25px;padding: 0 0 0 5px;width: calc(100% - 10px)!important;border: 1px solid #ddd;border-radius: 3px;font-size: 13px;color: #666666;">' +
+                  "</div>" +
                   '<div class="wrapper">' +
                   '<div class="content">' +
-                  '</div>' +
-                  '</div>' +
+                  "</div>" +
+                  "</div>" +
                   '<div class="toolbar">' +
                   '共<span class="totalCount"></span>项' +
                   '<a class="checkAll">全选</a>' +
-                  '</div>' +
-                  '</div>' +
+                  "</div>" +
+                  "</div>" +
                   '<div class="Rsel-right">' +
-                  '<div class="title">' + settings.rightTitle + '</div>' +
+                  '<div style="height: 30px;line-height: 30px;padding-left: 15px;color: #666666;font-size: 13px;background: #eeeeee;border-bottom: 1px solid #ddd;">' +
+                  settings.rightTitle +
+                  "</div>" +
                   '<div class="search">' +
-                  '<input type="text" class="searchInput">' +
-                  '</div>' +
+                  '<input class="searchInput" type="text" style="height: 25px;padding:0 0 0 5px;width: calc(100% - 10px)!important;border: 1px solid #ddd;border-radius: 3px;font-size: 13px;color: #666666;">' +
+                  "</div>" +
                   '<div class="wrapper">' +
                   '<div class="content">' +
-                  '<ul>' +
-                  '</ul>' +
-                  '</div>' +
-                  '</div>' +
+                  "<ul>" +
+                  "</ul>" +
+                  "</div>" +
+                  "</div>" +
                   '<div class="toolbar">' +
                   '已选<span class="checkedCount"></span>项' +
                   '<a class="clearBtn">反选</a>' +
-                  '</div>' +
-                  '</div>'
+                  "</div>" +
+                  "</div>"
               );
               //渲染数据
               $this.find('.Rsel-left .content').html(methods._renderChild({ id: 'root', name: '' }, settings.data));
@@ -191,7 +195,6 @@
           var html = [];
           $(data).each(function (index, item) {
               var isparent = item.child !== undefined && item.child.length > 0;
-
               html.push('<li>' + item.name + (isparent ? ' [+]' : ''));
 
               html.push('<label class="R-label"><input class="R-radio" type="checkbox" data-id="' +
