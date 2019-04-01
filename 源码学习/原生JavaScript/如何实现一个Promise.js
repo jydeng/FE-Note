@@ -68,6 +68,7 @@
       }, 100);
     });
   };
+
   var p2 = function(input) {
     return new Promise(function(resolve) {
       setTimeout(function() {
@@ -76,6 +77,7 @@
       }, 100);
     });
   };
+
   p()
     .then(
       function(res) {
